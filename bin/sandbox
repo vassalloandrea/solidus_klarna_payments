@@ -12,13 +12,6 @@ then
 fi
 echo "~~> Using branch $SOLIDUS_BRANCH of solidus"
 
-if [ -z "$SOLIDUS_FRONTEND" ]
-then
-  echo "~~> Use 'export SOLIDUS_FRONTEND=[solidus_frontend|solidus_starter_frontend]' to control the Solidus frontend"
-  SOLIDUS_FRONTEND="solidus_frontend"
-fi
-echo "~~> Using branch $SOLIDUS_FRONTEND as the solidus frontend"
-
 extension_name="solidus_klarna_payments"
 
 # Stay away from the bundler env of the containing extension.
@@ -63,14 +56,9 @@ unbundled bundle exec rake db:drop db:create
 
 unbundled bundle exec rails generate solidus:install \
   --auto-accept \
-  --user_class=Spree::User \
-  --enforce_available_locales=true \
-  --with-authentication=true \
   --payment-method=none \
-  --frontend=${SOLIDUS_FRONTEND} \
   $@
 
-unbundled bundle exec rails generate solidus:auth:install --auto-run-migrations
 unbundled bundle exec rails generate ${extension_name}:install --auto-run-migrations
 
 echo
